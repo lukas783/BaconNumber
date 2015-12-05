@@ -77,6 +77,6 @@ bool handleDatabase ( char* file, Graph g )
         while ( data != "" );
     }
 
-    g.printActors();
+    g.printCentersMovies();
     return true;
 }
