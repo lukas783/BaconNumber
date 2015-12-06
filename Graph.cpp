@@ -15,7 +15,6 @@ bool Graph::setMovie ( string s )
 {
     // set movie to s
     movie = s;
-    mCount++;
 
     // if movie was changed successfully, return true, else false.
     if ( movie == s )
@@ -27,12 +26,6 @@ bool Graph::setMovie ( string s )
 
 bool Graph::addActor ( string s )
 {
-    // stop this and make an unordered map with key being string (actor,movie)
-    // and mapped object being a vector of strings or a list or something.. will figure it out.
-    //vertex* a = new vertex ( movie );
-    //vertex* m = new vertex ( s );
-    //vertex* iterator;
-
     unordered_map<string, list<string>*>::const_iterator ita = actors.find ( s );
     unordered_map<string, list<string>*>::const_iterator itm = movies.find ( movie );
 
@@ -51,21 +44,15 @@ bool Graph::addActor ( string s )
     if ( ita == actors.end() )
     {
         list<string>* l = new list<string>;
+        vertex* v = new vertex ( s );
         l->push_back ( movie );
         actors.insert ( make_pair ( s, l ) );
-        table.insert ( make_pair ( s, false ) );
+        table.insert ( make_pair ( s, v ) );
     }
     else
     {
         list<string>* l = ita->second;
         l->push_back ( movie );
-        /*
-           iterator = ita->second;
-
-           while ( iterator->next != nullptr )
-               iterator = iterator->next;
-
-           iterator->next = a;*/
     }
 
     return true;
@@ -90,12 +77,55 @@ void Graph::printCentersMovies()
     }
 }
 
-inline int Graph::actorCount()
+void Graph::createMST()
 {
-    return aCount;
-}
+    // create mst, push stuff onto a queue and so forth..
+    // ok, so we will create a MST by starting at center and pushing onto queue all of actors in same movies as them,
+    // these actors will be set to have a degree of 1, and known to be true, then we go to all of those actors and enqueue
+    // the actors in movies they are in, and so forth incrementing the degree each time till we reach a point where there is
+    // nothing more to enqueue (enqueue only what is not already visited [known = false])
+    queue<vertex*> q;
 
-inline int Graph::movieCount()
-{
-    return mCount;
+    //unordered_map<string, vertex*>::const_iterator
+    vertex*	parent = table.find ( center )->second;
+    int degree = 0;
+    q.push ( parent );
+    parent->degree = degree;
+    parent->known = true;
+    histogram[0]++;
+
+    while ( !q.empty() )
+    {
+        //traverse the actors list of movies
+        parent = q.front();
+        q.pop();
+
+        for ( list<string>::const_iterator la = actors.find ( parent->id )->second->begin();
+                la != actors.find ( parent->id )->second->end(); ++la )
+        {
+            //traverse the movies for new actors to add
+            for ( list<string>::const_iterator lm = movies.find ( *la )->second->begin();
+                    lm != movies.find ( *la )->second->end(); ++lm )
+            {
+                vertex* child = table.find ( *lm )->second;
+
+                if ( ! ( child->known ) )
+                {
+                    child->known = true;
+                    child->degree = parent->degree + 1;
+                    histogram[parent->degree + 1]++;
+                    child->parent = parent;
+                    q.push ( child );
+                }
+            }
+        }
+
+    }
+
+    cout << "Histogram!\n";
+
+    for ( int i = 0; i < 10; i++ )
+    {
+        cout << i << "\t" << histogram[i] << "\n";
+    }
 }

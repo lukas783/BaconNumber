@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <list>
+#include <queue>
 #include <string>
 #include <unordered_map>
 
@@ -24,21 +25,22 @@ class Graph
         bool setMovie ( string s ); // sets the current movie
         bool addActor ( string s ); // adds the actor to the movie list and to the actor list
         void printCentersMovies(); // prints out the actors <-- idk if this is needed
-        int actorCount();
-        int movieCount();
+        void createMST(); // creates a minimum spanning tree for the
 
     private:
         struct vertex
         {
             string id = ""; // the value, either the movie title or the actors name
-            vertex* next = nullptr; // the next vertex in the adj list
+            bool known = false;
+            int degree = 0;
+            vertex* parent = nullptr;
             vertex ( string s ) : id ( s ) { }; // constructor for the vertex struct
         };
-        unordered_map<string, bool> table;
+        unordered_map<string, vertex*> table;
         unordered_map<string, list<string>*> actors;//  vertex* > actors; // hash table of actors containing a list of their movies
         unordered_map<string, list<string>*> movies;// vertex* > movies; // hash table of movies containing the actors in them
         string center = "Bacon, Kevin", movie = ""; // the 'center of universe' and the current movie
-        int mCount = 0, aCount = 0;
+        int histogram[10] = { 0 };
 };
 
 #endif

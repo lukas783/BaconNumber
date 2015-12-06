@@ -8,12 +8,7 @@ bool handleDatabase ( char* file, Graph g );
 
 int main ( int argc, char* argv[] )
 {
-    if ( argc == 4 )
-    {
-        Graph g ( argv[3] );
-        handleDatabase ( argv[2], g );
-    }
-    else if ( argc == 3 )
+    if ( argc == 3 )
     {
         Graph g ( argv[2] );
         handleDatabase ( argv[1], g );
@@ -25,8 +20,8 @@ int main ( int argc, char* argv[] )
     }
     else
     {
-        cout << "Usage: BaconNumber [-h] <database_file> [alternate_start]\n\n"
-             << "\t     -h - print histogram of path lengths and longest-shortest path\n\t          endpoints\n"
+        cout << "Usage: BaconNumber <database_file> [alternate_start]\n\n"
+             << "\t          endpoints\n"
              << "database_file   - contains records of the form: \n\t          Movie Name/actor1/actor2/...\n"
              << "alternate_start - supply a different center of universe, default = \"Bacon, Kevin\"\n"
              << "\t          quotes are required\n";
@@ -78,5 +73,6 @@ bool handleDatabase ( char* file, Graph g )
     }
 
     g.printCentersMovies();
+    g.createMST();
     return true;
 }
