@@ -1,27 +1,50 @@
+/**
+ * Programming Assignment #4 : Six Degrees of Kevin Bacon
+ * CSC300 - Data Structures - Fall 2015
+ * Professor: Dr. John Weiss
+ *
+ * Author: Lucas Carpenter
+ *
+ * Compile: g++ -O -o Bacon_Number -std=c++14 BaconGame.cpp Graph.cpp
+ *
+ * Usage: Bacon_Number <database_file> [alternate_start]
+**/
+
+//preprocessors
 #include <iostream>
 #include <fstream>
 #include "Graph.h"
 
 using namespace std;
 
+//function prototypes
 bool handleDatabase ( char* file, Graph g );
 
+/**
+ * main(int, char*), the starting point of the program, if the arguments
+ *  in are 2 or 3, the program will read the input file for <database_file>
+ *  and initialize the graph class, setting the 'center' to [alternate_start]
+ * If an invalid number of arguments are input, it will print an error message
+ *  and a usage statement.
+**/
 int main ( int argc, char* argv[] )
 {
     if ( argc == 3 )
     {
+        // starts the game with an alternate 'center'
         Graph g ( argv[2] );
         handleDatabase ( argv[1], g );
     }
     else if ( argc == 2 )
     {
+        // starts the game with the default 'center'
         Graph g ( "Bacon, Kevin" );
         handleDatabase ( argv[1], g );
     }
     else
     {
-        cout << "Usage: BaconNumber <database_file> [alternate_start]\n\n"
-             << "\t          endpoints\n"
+        // usage statement
+        cout << "Usage: Bacon_Number <database_file> [alternate_start]\n\n"
              << "database_file   - contains records of the form: \n\t          Movie Name/actor1/actor2/...\n"
              << "alternate_start - supply a different center of universe, default = \"Bacon, Kevin\"\n"
              << "\t          quotes are required\n";
@@ -31,6 +54,12 @@ int main ( int argc, char* argv[] )
     return 0;
 }
 
+/**
+ * handleDatabase(char*, Graph), takes an input file from char*, and
+ *  dissects the contents into movies and actors to be stored in Graph
+ * Also handles outputting onto the screen using Graph's member functions
+ *  and handling the menu once the Graph has been built.
+**/
 bool handleDatabase ( char* file, Graph g )
 {
     ifstream in;
@@ -45,6 +74,7 @@ bool handleDatabase ( char* file, Graph g )
     string data = "";
     int pos;
 
+    // while the file has information to read, read it.
     while ( getline ( in, data ) )
     {
         pos = data.find ( '/' ); // find the end of the movie title
