@@ -11,6 +11,7 @@
 **/
 
 //preprocessors
+#include <ctime>
 #include <iostream>
 #include <fstream>
 #include "Graph.h"
@@ -75,6 +76,8 @@ bool handleDatabase ( char* file, Graph g )
     int pos;
 
     // while the file has information to read, read it.
+    auto c1 = clock();
+
     while ( getline ( in, data ) )
     {
         pos = data.find ( '/' ); // find the end of the movie title
@@ -102,6 +105,12 @@ bool handleDatabase ( char* file, Graph g )
         while ( data != "" );
     }
 
+    auto c2 = clock();
+    // prints movie hash table size and actors hash table size to the screen
+    cout << "Reading movies: " << g.getMovieSize() << " and " << g.getActorSize() << " actors in database.\n";
+    cout << "Elapsed time: ";
+    auto totaltime = c2 - c1;
+    cout << ( totaltime / ( CLOCKS_PER_SEC ) ) << " sec\n";
     g.printCentersMovies();
     g.createMST();
     g.printStats();

@@ -7,11 +7,12 @@
 **/
 Graph::Graph ( string s ) : center ( s )
 {
-    cout << "Center of the universe is.. " << center << "\n";
 }
 
 
-Graph::~Graph() { };
+Graph::~Graph()
+{
+};
 
 /**
  * setMovie(string), sets the current movie to be added into actors hash
@@ -81,8 +82,7 @@ bool Graph::addActor ( string s )
 **/
 void Graph::printCentersMovies()
 {
-    // print movie hash table size and actors hash table size and set iterator for traversing 'center's list
-    cout << "Reading movies: " << movies.size() << " and " << actors.size() << " actors in database.\n";
+    //set iterator for traversing 'center's list
     unordered_map<string, list<string>*>::const_iterator it = actors.find ( center );
 
     // print out the list of movies that 'center' is in, or print an error message if 'center' does not exist
@@ -219,4 +219,14 @@ void Graph::getPath ( string s )
             cout << v->id << "\n";
         }
     }
+}
+
+int Graph::getActorSize()
+{
+    return actors.size();
+}
+
+int Graph::getMovieSize()
+{
+    return movies.size();
 }

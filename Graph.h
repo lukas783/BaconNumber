@@ -26,6 +26,8 @@ class Graph
         void createMST(); // creates a minimum spanning tree for the
         void printStats(); // prints out the histogram as well as the avg distance from 'center'
         void getPath ( string s ); // returns shortest path from s to center
+        int getActorSize(); // returns the number of actors in the database
+        int getMovieSize(); // returns teh number of movies in the database
 
     private:
         struct vertex
