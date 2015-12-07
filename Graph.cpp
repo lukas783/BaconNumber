@@ -88,7 +88,6 @@ void Graph::createMST()
     q.push ( parent );
     parent->degree = degree;
     parent->known = true;
-    histogram[0]++;
 
     //while the queue contains actors
     while ( !q.empty() )
@@ -97,20 +96,20 @@ void Graph::createMST()
         parent = q.front();
         q.pop();
 
+        //traverse through current vertex's (actors) list of movies
         for ( list<string>::const_iterator la = actors.find ( parent->id )->second->begin();
                 la != actors.find ( parent->id )->second->end(); ++la )
         {
-            //traverse the movies for new actors to add
+            //traverse the current vertex's (movies) list of co-actors
             for ( list<string>::const_iterator lm = movies.find ( *la )->second->begin();
                     lm != movies.find ( *la )->second->end(); ++lm )
             {
                 vertex* child = table.find ( *lm )->second;
 
-                if ( ( ! ( child->known ) ) && ( parent->degree < 8 ) )
+                if ( ( ! ( child->known ) ) && ( parent->degree <= 8 ) )
                 {
                     child->known = true;
                     child->degree = parent->degree + 1;
-                    histogram[parent->degree + 1]++;
                     child->parent = parent->id;
                     q.push ( child );
                 }
@@ -124,5 +123,22 @@ void Graph::createMST()
 
 void Graph::printStats()
 {
+    int sum = 0;
+    float avg = 0;
 
+    for ( auto i : table )
+    {
+        if ( i.second->known )
+            histogram[i.second->degree]++;
+    }
+
+    for ( auto i : histogram )
+    {
+        cout << setw ( 4 ) << i << setw ( 10 ) << histogram[i] << "\n";
+        sum += histogram[i]; // for finding inf
+        avg += ( histogram[i] * i ); // avg path length
+    }
+
+    cout << setw ( 4 ) << "Inf" << setw ( 10 ) << ( actors.size() - sum ) << "\n\n";
+    cout << "Avg path length : " << ( avg / ( ( float ) actors.size() ) ) << "\n\n";
 }

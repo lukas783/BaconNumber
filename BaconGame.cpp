@@ -74,5 +74,6 @@ bool handleDatabase ( char* file, Graph g )
 
     g.printCentersMovies();
     g.createMST();
+    g.printStats();
     return true;
 }
