@@ -75,6 +75,8 @@ void Graph::printCentersMovies()
         for ( list<string>::const_iterator lit = it->second->begin(); lit != it->second->end(); ++lit )
             cout << *lit << "\n";
     }
+
+    cout << "\n";
 }
 
 void Graph::createMST()
@@ -88,6 +90,7 @@ void Graph::createMST()
     q.push ( parent );
     parent->degree = degree;
     parent->known = true;
+    histogram[0] = 1;
 
     //while the queue contains actors
     while ( !q.empty() )
@@ -111,6 +114,7 @@ void Graph::createMST()
                     child->known = true;
                     child->degree = parent->degree + 1;
                     child->parent = parent->id;
+                    histogram[child->degree]++;
                     q.push ( child );
                 }
             }
@@ -126,13 +130,7 @@ void Graph::printStats()
     int sum = 0;
     float avg = 0;
 
-    for ( auto i : table )
-    {
-        if ( i.second->known )
-            histogram[i.second->degree]++;
-    }
-
-    for ( auto i : histogram )
+    for ( int i = 0; i < 9; i ++ )
     {
         cout << setw ( 4 ) << i << setw ( 10 ) << histogram[i] << "\n";
         sum += histogram[i]; // for finding inf
@@ -141,4 +139,33 @@ void Graph::printStats()
 
     cout << setw ( 4 ) << "Inf" << setw ( 10 ) << ( actors.size() - sum ) << "\n\n";
     cout << "Avg path length : " << ( avg / ( ( float ) actors.size() ) ) << "\n\n";
+}
+
+void Graph::getPath ( string s )
+{
+    unordered_map<string, vertex*>::const_iterator it = table.find ( s );
+
+    if ( it == table.end() )
+    {
+        cout << s << " does not exist in the actor database.\n";
+    }
+    else
+    {
+        vertex* v = it->second;
+
+        if ( ! ( v->known ) )
+            cout << s << " has no path to " << center << ".\n";
+        else
+        {
+            cout << v->degree << ": ";
+
+            while ( v->id != center )
+            {
+                cout << v->id << " => ";
+                v = table.find ( v->parent )->second;
+            }
+
+            cout << v->id << "\n";
+        }
+    }
 }

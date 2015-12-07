@@ -28,6 +28,7 @@ class Graph
         void printCentersMovies(); // prints out the actors <-- idk if this is needed
         void createMST(); // creates a minimum spanning tree for the
         void printStats(); // prints out the histogram as well as the avg distance from 'center'
+        void getPath ( string s ); // returns shortest path from s to center
 
     private:
         struct vertex

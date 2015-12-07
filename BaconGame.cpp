@@ -75,5 +75,19 @@ bool handleDatabase ( char* file, Graph g )
     g.printCentersMovies();
     g.createMST();
     g.printStats();
+
+    string prompt = "";
+
+    while ( true )
+    {
+        cout << "Enter the name of an actor <Last, First> \"\" to exit: ";
+        getline ( cin, prompt );
+
+        if ( prompt == "" )
+            exit ( 0 );
+
+        g.getPath ( prompt );
+    }
+
     return true;
 }
