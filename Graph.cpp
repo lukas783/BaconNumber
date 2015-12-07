@@ -79,11 +79,7 @@ void Graph::printCentersMovies()
 
 void Graph::createMST()
 {
-    // create mst, push stuff onto a queue and so forth..
-    // ok, so we will create a MST by starting at center and pushing onto queue all of actors in same movies as them,
-    // these actors will be set to have a degree of 1, and known to be true, then we go to all of those actors and enqueue
-    // the actors in movies they are in, and so forth incrementing the degree each time till we reach a point where there is
-    // nothing more to enqueue (enqueue only what is not already visited [known = false])
+    cout << "Building MST ... ";
     queue<vertex*> q;
 
     //unordered_map<string, vertex*>::const_iterator
@@ -94,6 +90,7 @@ void Graph::createMST()
     parent->known = true;
     histogram[0]++;
 
+    //while the queue contains actors
     while ( !q.empty() )
     {
         //traverse the actors list of movies
@@ -109,12 +106,12 @@ void Graph::createMST()
             {
                 vertex* child = table.find ( *lm )->second;
 
-                if ( ! ( child->known ) )
+                if ( ( ! ( child->known ) ) && ( parent->degree < 8 ) )
                 {
                     child->known = true;
                     child->degree = parent->degree + 1;
                     histogram[parent->degree + 1]++;
-                    child->parent = parent;
+                    child->parent = parent->id;
                     q.push ( child );
                 }
             }
@@ -122,10 +119,10 @@ void Graph::createMST()
 
     }
 
-    cout << "Histogram!\n";
+    cout << "done!\n\n";
+}
 
-    for ( int i = 0; i < 10; i++ )
-    {
-        cout << i << "\t" << histogram[i] << "\n";
-    }
+void Graph::printStats()
+{
+
 }
